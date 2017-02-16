@@ -3,7 +3,7 @@ info:
   version: "0.0.1"
   title: Hello World App
 # during dev, should point to your local machine
-host: localhost:10010
+host: localhost:3000
 # basePath prefixes all resource paths 
 basePath: /
 # 
@@ -44,7 +44,101 @@ paths:
             $ref: "#/definitions/ErrorResponse"
   /swagger:
     x-swagger-pipe: swagger_raw
-# complex objects have schema definitions
+  /users:
+    x-swagger-router-controller: user_controller
+    get:
+      summary: List all users
+      operationId: getAllUser
+      produces:
+        - application/json 
+      responses:
+        200:
+          description: An array with all user.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/User'
+    post:
+      summary: Create a new user
+      operationId: addUser
+      consumes:
+        - application/json 
+      produces:
+        - application/json 
+      parameters:
+        - in: body
+          name: user
+          description: The user you want to create.
+          required: true
+          schema:
+            $ref: '#/definitions/User'
+      responses:
+        200:
+          description: The user has been successfully created.
+          schema:
+            $ref: '#/definitions/Message'
+
+  /users/{id_user}:
+    get:
+      summary: Lookup a specific user
+      operationId: getUserById
+      produces:
+        - application/json  
+      parameters:
+        - name: id_user
+          in: path
+          description: The id of the user you want to get
+          required: true
+          type: string
+      responses:
+        200:
+          description: the user you want to get by id.
+          schema:
+            $ref: '#/definitions/HelloWorldResponse'
+    put:
+      summary: Update a user
+      operationId: updateUser
+      consumes:
+        - application/json 
+      produces:
+        - application/json 
+      parameters:
+        - in: path
+          name: id_user
+          type: string
+          description: The id of the user you want to update.
+          required: true
+        - in: body
+          name: user
+          description: The user you want update with.
+          required: true
+          schema:
+            $ref: '#/definitions/User'
+      responses:
+        200:
+          description: The user has been successfully updated.
+          schema:
+            $ref: '#/definitions/Message'
+
+    delete:
+      summary: Delete a user
+      operationId: deleteUser
+      produces:
+        - application/json 
+      parameters:
+        - in: path
+          name: id_user
+          type: string
+          description: The id of the user you want to update.
+          required: true
+      responses:
+        200:
+          description: The user has been deleted.
+          schema:
+            $ref: '#/definitions/Message'
+
+
+    # complex objects have schema definitions
 definitions:
   HelloWorldResponse:
     required:
@@ -58,3 +152,23 @@ definitions:
     properties:
       message:
         type: string
+  User:
+    type: object
+    properties:
+      _id:
+        type: string
+        description: A unique identifier of the user. Automatically assigned by the API when the user is created.
+      nom:
+        type: string
+        description: The name of the user. 
+      prenom:
+        type: string
+        description: The lastname of the user.
+
+  Message:
+    type: object
+    properties:
+      message:
+        type: string
+        description: A response message from the user app. 
+ 

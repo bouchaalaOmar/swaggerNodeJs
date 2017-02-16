@@ -23,7 +23,7 @@
   var newUser=req.body;
   User.create(newUser,function(err){
   if(err) throw err;
-  console.log("insertion valide");
+  console.log("valid insertion");
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   res.json(newUser);
